@@ -3,36 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passphrase Redirect</title>
+    <title>Passphrase Portal</title>
 </head>
-<body>
-    <form id="passphraseForm">
-        <label for="passphrase">Enter Passphrase:</label>
-        <input type="text" id="passphrase" name="passphrase" required>
-        <button type="submit">Submit</button>
-    </form>
+<body style="font-family: Arial, sans-serif; display: flex; justify-content: center; margin-top: 50px;">
+    
+    <div id="mainContainer" style="display: flex; flex-direction: column; gap: 20px; width: 300px;">
+        <h2>Enter Passphrases</h2>
+        
+        <!-- Input 1 -->
+        <form class="passphraseForm" data-index="1">
+            <label for="passphrase1">Resource 1 Passphrase:</label><br>
+            <input type="text" id="passphrase1" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 1</button>
+        </form>
+
+        <!-- Input 2 -->
+        <form class="passphraseForm" data-index="2">
+            <label for="passphrase2">Resource 2 Passphrase:</label><br>
+            <input type="text" id="passphrase2" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 2</button>
+        </form>
+
+        <!-- Input 3 -->
+        <form class="passphraseForm" data-index="3">
+            <label for="passphrase3">Resource 3 Passphrase:</label><br>
+            <input type="text" id="passphrase3" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 3</button>
+        </form>
+
+        <!-- Input 4 -->
+        <form class="passphraseForm" data-index="4">
+            <label for="passphrase4">Resource 4 Passphrase:</label><br>
+            <input type="text" id="passphrase4" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 4</button>
+        </form>
+
+        <!-- Input 5 -->
+        <form class="passphraseForm" data-index="5">
+            <label for="passphrase5">Resource 5 Passphrase:</label><br>
+            <input type="text" id="passphrase5" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 5</button>
+        </form>
+
+        <!-- Input 6 -->
+        <form class="passphraseForm" data-index="6">
+            <label for="passphrase6">Resource 6 Passphrase:</label><br>
+            <input type="text" id="passphrase6" name="passphrase" required style="width: 100%; margin-top: 5px;">
+            <button type="submit" style="margin-top: 5px;">Submit 6</button>
+        </form>
+    </div>
 
     <script>
-        document.getElementById('passphraseForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Save the initial HTML layout of the body so we can restore it later
+        const initialBodyHTML = document.body.innerHTML;
 
-            // Mapping table: passphrase and file to use
-            const passphraseMapping = {
-                'password': 'IMG_0982.MOV',
-            };
-
-            // Get the passphrase from form
-            const passphrase = document.getElementById('passphrase').value;
-
-            // check for phrase on mapping above
-            if (passphraseMapping[passphrase]) {
-                // Go to the file
-                window.location.href = window.location.origin + passphraseMapping[passphrase];
-            } else {
-                // Display an alert if no match
-                alert('Passphrase not recognized. Please try again.');
+        // Mapping table matching each input form to its correct password, text, and link
+        const passphraseMapping = {
+            '1': {
+                correctPassword: 'password1',
+                text: 'You\'ve solved my puzzle! Head to SE 917 for the next one. ',
+                linkUrl: 'https://youtu.be/3pir4W-kadE'
+            },
+            '2': {
+                correctPassword: 'password2',
+                text: 'This is the description for the second resource.',
+                linkUrl: 'https://example.com/resource2'
+            },
+            '3': {
+                correctPassword: 'password3',
+                text: 'This is the description for the third resource.',
+                linkUrl: 'https://example.com/resource3'
+            },
+            '4': {
+                correctPassword: 'password4',
+                text: 'This is the description for the fourth resource.',
+                linkUrl: 'https://example.com/resource4'
+            },
+            '5': {
+                correctPassword: 'password5',
+                text: 'This is the description for the fifth resource.',
+                linkUrl: 'https://example.com/resource5'
+            },
+            '6': {
+                correctPassword: 'password6',
+                text: 'This is the description for the sixth resource.',
+                linkUrl: 'https://example.com/resource6'
             }
-        });
+        };
+
+        // Function to re-bind event listeners after restoring the form
+        function setupEventListeners() {
+            document.querySelectorAll('.passphraseForm').forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const formIndex = this.getAttribute('data-index');
+                    const inputField = this.querySelector('input[name="passphrase"]');
+                    const enteredPassword = inputField.value;
+                    const resourceData = passphraseMapping[formIndex];
+
+                    // Check if the typed password matches the correct one for this specific field
+                    if (enteredPassword === resourceData.correctPassword) {
+                        // Clear the screen, display the text, the raw URL link, and a Back button
+                        document.body.innerHTML = `
+                            <div style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+                                <h2>Access Granted</h2>
+                                <p>${resourceData.text}</p>
+                                <p><a href="${resourceData.linkUrl}" target="_blank">${resourceData.linkUrl}</a></p>
+                                <br><br>
+                                <button id="backButton" style="padding: 10px 20px; cursor: pointer;">← Back to Passphrases</button>
+                            </div>
+                        `;
+
+                        // Add event listener to the back button to restore the original UI
+                        document.getElementById('backButton').addEventListener('click', function() {
+                            document.body.innerHTML = initialBodyHTML;
+                            setupEventListeners(); // Re-apply event listeners to the restored forms
+                        });
+                    } else {
+                        alert('Incorrect passphrase for this field. Please try again.');
+                    }
+                });
+            });
+        }
+
+        // Initial setup call
+        setupEventListeners();
     </script>
 </body>
 </html>
